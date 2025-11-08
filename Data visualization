@@ -1,0 +1,39 @@
+#------------------------
+#  Attendance Heatmap
+#------------------------
+
+attendance = cleaned_data["Attendance"]
+attendance = np.sort(attendance)
+rows,cols = 35, 35
+attendance_grid = np.pad(attendance,
+                        (0, rows * cols - len(attendance)),
+                        mode='constant',
+                        constant_values=np.nan).reshape(rows, cols)
+plt.figure(figsize=(10, 6))
+plt.imshow(attendance_grid, cmap='YlGnBu', aspect='auto')
+plt.colorbar(label='Attendance (%)')
+plt.title('Student Attendance Heatmap')
+plt.xlabel('Students (grouped)')
+plt.ylabel('Group')
+plt.show()
+
+------------------------------------------------------------
+#------------------------------------
+#  Histogram Plots For Each Subject
+#------------------------------------
+
+color = "darkorange"
+
+plt.style.use("seaborn-v0_8-darkgrid")
+
+for subject in SUBJECTS:
+    if subject in ["English", "History"]:
+        color = "deepskyblue"
+    plt.hist(cleaned_data[subject], bins = 10, edgecolor = "black", color = color, alpha = 0.8)
+    plt.title(f"Distribution of {subject} Scores", fontsize = 14, fontweight = "bold")
+    plt.xlabel("Scores")
+    plt.ylabel("Number of Students")
+    plt.grid(axis = "y", linestyle = "--", alpha = 0.7)
+    plt.tight_layout()
+    plt.show()
+
