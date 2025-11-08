@@ -1,0 +1,51 @@
+# -----------------------------
+#  Helper Function
+# -----------------------------
+def student_categorize(score):
+    """Categorize student performance based on average score."""
+    if score >= 85:
+        return "High"
+    elif score >= 60:
+        return "Medium"
+    else:
+        return "Low"
+
+
+# -----------------------------
+#  Configuration
+# -----------------------------
+INPUT_FILE = "students_dataset.csv"
+OUTPUT_FILE = "students_cleaned.csv"
+
+SUBJECTS = ["Math", "Physics", "Chemistry", "Biology", "English", "History"]
+NAME_COLS = ["First_Name", "Last_Name"]
+
+
+# -----------------------------
+#  Load and Clean Data
+# -----------------------------
+dataset = pd.read_csv(INPUT_FILE)
+cleaned_data = dataset.drop_duplicates().copy()
+
+# Fill missing subject scores and attendance
+cleaned_data[SUBJECTS] = cleaned_data[SUBJECTS].fillna(0)
+cleaned_data["Attendance"] = cleaned_data["Attendance"].fillna(0)
+
+# Handle missing names
+cleaned_data = cleaned_data.dropna(subset=NAME_COLS, how="all")
+cleaned_data[NAME_COLS] = cleaned_data[NAME_COLS].fillna("Unknown")
+
+# Convert dates
+cleaned_data["Date"] = pd.to_datetime(cleaned_data["Date"])
+
+# Compute average score and categorize performance
+cleaned_data["Average_score"] = cleaned_data[SUBJECTS].mean(axis=1)
+cleaned_data["Performance"] = cleaned_data["Average_score"].apply(student_categorize)
+
+
+# -----------------------------
+#  Export Cleaned Data
+# -----------------------------
+cleaned_data.to_csv(OUTPUT_FILE, index=False, encoding="utf-8")
+print("Cleaned data exported successfully to:", OUTPUT_FILE)
+print(cleaned_data.head())
