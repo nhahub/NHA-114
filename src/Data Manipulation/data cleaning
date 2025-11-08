@@ -49,3 +49,16 @@ cleaned_data["Performance"] = cleaned_data["Average_score"].apply(student_catego
 cleaned_data.to_csv(OUTPUT_FILE, index=False, encoding="utf-8")
 print("Cleaned data exported successfully to:", OUTPUT_FILE)
 print(cleaned_data.head())
+
+#---------------------------
+# Student record function
+#---------------------------
+def get_record(student_id):
+    """This function takes the student id and search for it in a dataframe and return the student's record"""
+    record = cleaned_data[cleaned_data["Student_ID"] == student_id]
+    if record.empty:
+        print("⚠️ Student Not Found")
+        return None
+    else:
+        print("✅ Student found!")
+        return record
