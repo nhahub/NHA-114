@@ -1,0 +1,16 @@
+INSERT INTO students(Student_ID, First_Name, Last_Name,Birth_Date)
+SELECT 
+Student_ID, 
+First_Name, 
+Last_Name,
+Birth_Date 
+FROM students_raw;
+
+INSERT INTO subjects (Subject_Name)
+VALUES
+('Math'),
+('Physics'),
+('Chemistry'),
+('Biology'),
+('English'),
+('History');
