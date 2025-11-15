@@ -1,3 +1,6 @@
+CREATE DATABASE student_data;
+----------------------------------------
+
 CREATE TABLE students(
   Student_ID INT PRIMARY KEY,
   First_Name VARCHAR(50),
