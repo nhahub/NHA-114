@@ -10,12 +10,25 @@ def student_categorize(score):
     else:
         return "Low"
 
+#---------------------------
+# Student record function
+#---------------------------
+def get_record(student_id):
+    """This function takes the student id and search for it in a dataframe and return the student's record"""
+    record = cleaned_data[cleaned_data["Student_ID"] == student_id]
+    if record.empty:
+        print("⚠️ Student Not Found")
+        return None
+    else:
+        print("✅ Student found!")
+        return record
 
 # -----------------------------
 #  Configuration
 # -----------------------------
 INPUT_FILE = "students_dataset.csv"
 OUTPUT_FILE = "students_cleaned.csv"
+SQL_FILE = "Students_SQL.csv"
 
 SUBJECTS = ["Math", "Physics", "Chemistry", "Biology", "English", "History"]
 NAME_COLS = ["First_Name", "Last_Name"]
@@ -50,15 +63,9 @@ cleaned_data.to_csv(OUTPUT_FILE, index=False, encoding="utf-8")
 print("Cleaned data exported successfully to:", OUTPUT_FILE)
 print(cleaned_data.head())
 
-#---------------------------
-# Student record function
-#---------------------------
-def get_record(student_id):
-    """This function takes the student id and search for it in a dataframe and return the student's record"""
-    record = cleaned_data[cleaned_data["Student_ID"] == student_id]
-    if record.empty:
-        print("⚠️ Student Not Found")
-        return None
-    else:
-        print("✅ Student found!")
-        return record
+# -----------------------------
+#  Export SQL Data
+# -----------------------------
+sql_data = cleaned_data.drop(columns = ["Average_score", "Performance"])
+sql_data.to_csv(SQL_FILE, index = False, encoding = "utf-8")
+print(f"SQL-ready data exported successfully to: {SQL_FILE} ")
