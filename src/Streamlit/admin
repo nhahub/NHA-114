@@ -1,1 +1,99 @@
 #code here
+import streamlit as st
+import pandas as pd 
+import time
+import datetime
+from pathlib import Path
+import subprocess  
+
+st.set_page_config(page_title="Students Performance Dashboard")
+
+admin_id = st.session_state.get("admin_id", "")
+admin_name = st.session_state.get("admin_name", "")
+
+
+student_id = st.session_state.get("student_id", "")
+student_name = st.session_state.get("studnet_name1", "")
+last_name = st.session_state.get("studnet_name2", "")
+
+st.title("👨‍💼 Admin File Control")
+
+if admin_id:
+    st.subheader(f"ID: {admin_id}")
+    st.subheader(f"Name: {admin_name}")
+    uploaded_file = st.file_uploader("📁 Choose a file", type=["csv", "txt", "xlsx"])
+    if uploaded_file is not None and st.button("Submit File"):
+
+        current_dir = Path(__file__).parent  
+        save_path = current_dir / uploaded_file.name  
+
+        # Save uploaded file
+        with open(save_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        st.success(f"✅ File saved successfully")
+
+        #READ THE IMPORTED DATA FOR CLEANING 
+        if uploaded_file.name.lower().endswith(".csv"):
+            df = pd.read_csv(save_path)
+            st.dataframe(df.head(5))
+
+
+        def student_categorize(score):
+            """Categorize student performance based on average score."""
+            if score >= 85:
+                return "High"
+            elif score >= 60:
+                return "Medium"
+            else:
+                return "Low"
+
+
+        # -----------------------------
+        #  Configuration
+        # -----------------------------
+        INPUT_FILE = "students_dataset.csv"
+        OUTPUT_FILE = "students_cleaned.csv"
+        SUBJECTS = ["Math", "Physics", "Chemistry", "Biology", "English", "History"]
+        NAME_COLS = ["First_Name", "Last_Name"]
+
+        # -----------------------------
+        #  Load and Clean Data
+        # -----------------------------
+        dataset =  pd.read_csv(save_path)
+        cleaned_data = dataset.drop_duplicates().copy()
+        # Fill missing subject scores and attendance
+        cleaned_data[SUBJECTS] = cleaned_data[SUBJECTS].fillna(0)
+        cleaned_data["Attendance"] = cleaned_data["Attendance"].fillna(0)
+        # Handle missing names
+        cleaned_data = cleaned_data.dropna(subset=NAME_COLS, how="all")
+        cleaned_data[NAME_COLS] = cleaned_data[NAME_COLS].fillna("Unknown")
+        # Convert dates
+        cleaned_data['Birth_Date'] = pd.to_datetime(cleaned_data['Birth_Date']).dt.strftime("%Y-%m-%d")
+        # Compute average score and categorize performance + (YOUSSEF) CHANGE THE ORDER OF VISUALISED DATA
+        cleaned_data["Average_score"] = cleaned_data[SUBJECTS].mean(axis=1)
+        cleaned_data["Performance"] = cleaned_data["Average_score"].apply(student_categorize)
+        new_order = ['Student_ID','First_Name','Last_Name','Birth_Date','Math','Physics','Chemistry','Biology','English','History','Average_score','Performance','Attendance']
+        cleaned_data = cleaned_data[new_order]
+        # -----------------------------
+        #  Export Cleaned Data
+        # -----------------------------
+        cleaned_data.to_csv(OUTPUT_FILE, index=False, encoding="utf-8")
+        # SEND THE CLEANED FILE TO SEEDS IN DBT
+        sql_data = cleaned_data.drop(columns = ["Average_score", "Performance"])
+        seed_dir = Path("C:\\Users\\youss\\OneDrive\\Desktop\\capstone_DEPI\\dbt_folder\\seeds")
+        seed_path = seed_dir / "Students_SQL.csv"
+        sql_data.to_csv(seed_path, index=False, encoding="utf-8")
+
+        # TRANSFER FILE TO SEEDS TO GO TO SQL WORKBENCH
+        subprocess.run(["dbt", "seed"], cwd="C:\\Users\\youss\\OneDrive\\Desktop\\capstone_DEPI\\dbt_folder")
+
+        #SUCCESSFULLY DATA CLEANED INFORMATION
+        st.success(f"Cleaned data exported successfully And Here is a Sample of It: ")
+        st.dataframe(cleaned_data.head(5))
+        time.sleep(5)
+        subprocess.run(["dbt", "run"], cwd="C:\\Users\\youss\\OneDrive\\Desktop\\capstone_DEPI\\dbt_folder")
+#HANDLE IF STUDENT OR NO ID CONDITION
+elif student_id:
+    st.warning("You Are Not Allowed To Access This Page")
+else:
+    st.warning("Please go back and enter your ID.")
