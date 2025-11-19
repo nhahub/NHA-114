@@ -14,3 +14,33 @@ VALUES
 ('Biology'),
 ('English'),
 ('History');
+
+INSERT INTO Scores (Student_ID, Subject_ID, Score)
+SELECT r.Student_ID, s.Subject_ID, r.Math
+FROM students_raw r
+JOIN Subjects s ON s.Subject_Name = 'Math';
+
+INSERT INTO Scores (Student_ID, Subject_ID, Score)
+SELECT r.Student_ID, s.Subject_ID, r.Physics
+FROM students_raw r
+JOIN Subjects s ON s.Subject_Name = 'Physics';
+
+INSERT INTO Scores (Student_ID, Subject_ID, Score)
+SELECT r.Student_ID, s.Subject_ID, r.Chemistry
+FROM students_raw r
+JOIN Subjects s ON s.Subject_Name = 'Chemistry';
+
+INSERT INTO Scores (Student_ID, Subject_ID, Score)
+SELECT r.Student_ID, s.Subject_ID, r.Biology
+FROM students_raw r
+JOIN Subjects s ON s.Subject_Name = 'Biology';
+
+INSERT INTO Scores (Student_ID, Subject_ID, Score)
+SELECT r.Student_ID, s.Subject_ID, r.English
+FROM students_raw r
+JOIN Subjects s ON s.Subject_Name = 'English';
+
+INSERT INTO Scores (Student_ID, Subject_ID, Score)
+SELECT r.Student_ID, s.Subject_ID, r.History
+FROM students_raw r
+JOIN Subjects s ON s.Subject_Name = 'History';
