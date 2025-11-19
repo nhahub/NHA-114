@@ -14,9 +14,9 @@ def choose_email(**context):
 
     # WHICH CONDITION TO SEND EMAIL
     if sentiment == "Very Negative" or "Negative":
-        return "youssefahmed65ah@gmail.com"
+        return "Example@gmail.com"
     else:
-        return "fraction.ff.discord@gmail.com"
+        return "Example2@gmail.com"
 
 def set_recipient(**context):
     recipient_email = choose_email(**context)
