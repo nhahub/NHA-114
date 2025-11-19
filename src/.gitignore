@@ -1,0 +1,19 @@
+# 1. Python Environment & Artifacts
+my_venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+
+# 2. Airflow, dbt, and Logs
+logs/
+*.log
+.env
+dbt_folder/target/
+dbt_folder/dbt_packages/
+dbt_folder/profiles.yml
+
+# 3. IDE and System Files
+.vscode/
+.DS_Store
+*.bak
