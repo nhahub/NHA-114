@@ -1,1 +1,75 @@
+version: 2
 
+models:
+  - name: subjects
+    description: "List of all subjects with unique subject IDs."
+    columns:
+      - name: subject_id
+        description: "Primary key for the subject."
+        tests:
+          - unique
+          - not_null
+      - name: subject_name
+        description: "Name of the subject."
+
+  - name: students
+    description: "List of unique students extracted from Students_SQL seed."
+    columns:
+      - name: Student_ID
+        description: "Primary key for each student."
+        tests:
+          - unique
+          - not_null
+      - name: First_Name
+        description: "Student's first name."
+      - name: Last_Name
+        description: "Student's last name."
+      - name: Birth_Date
+        description: "Student's date of birth."
+
+  - name: scores
+    description: "Long-form table containing each student's scores for all subjects."
+    columns:
+      - name: Score_ID
+        description: "Primary key for each score entry."
+        tests:
+          - unique
+          - not_null
+      - name: Student_ID
+        description: "Foreign key referencing students.Student_ID."
+        tests:
+          - not_null
+      - name: Subject_ID
+        description: "Foreign key referencing subjects.subject_id."
+        tests:
+          - not_null
+      - name: Score
+        description: "Score the student achieved in the subject."
+        tests:
+          - not_null
+
+  - name: scores_by_month
+    description: "Monthly aggregated statistics of student scores."
+    columns:
+      - name: month
+        description: "Month extracted from Birth_Date for demonstration grouping."
+      - name: Student_ID
+        description: "Reference to the student."
+      - name: avg_score
+        description: "Average score per student per month."
+
+  - name: top_performance
+    description: "Top performer in each subject (highest score)."
+    columns:
+      - name: Subject_ID
+        description: "Subject in which top score is found."
+        tests:
+          - not_null
+      - name: Student_ID
+        description: "Student with the highest score in this subject."
+        tests:
+          - not_null
+      - name: Score
+        description: "Highest score for that subject."
+        tests:
+          - not_null
