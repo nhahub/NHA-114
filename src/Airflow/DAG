@@ -1,1 +1,57 @@
 # Airflow DAG to send email according to sentiment output
+from airflow import DAG
+from airflow.operators.email import EmailOperator
+from airflow.operators.python import PythonOperator
+from datetime import datetime
+
+def choose_email(**context):
+    # Get sentiment from DAG run config
+    sentiment = context["dag_run"].conf.get("sentiment", "Neutral")
+
+    # If sentiment is a list (from Streamlit), take the first element
+    if isinstance(sentiment, list):
+        sentiment = sentiment[0]
+
+    # WHICH CONDITION TO SEND EMAIL
+    if sentiment == "Very Negative" or "Negative":
+        return "youssefahmed65ah@gmail.com"
+    else:
+        return "fraction.ff.discord@gmail.com"
+
+def set_recipient(**context):
+    recipient_email = choose_email(**context)
+    print(f"DEBUG - Recipient Email: {recipient_email}") 
+    context["ti"].xcom_push(key="recipient_email", value=recipient_email)
+
+with DAG(
+    dag_id="email_feedback_sentiment_dag",
+    start_date=datetime(2025, 1, 1),
+    schedule_interval=None,  # triggered manually
+    catchup=False,
+    tags=["feedback"],
+) as dag:
+
+    # Determine recipient based on sentiment
+    set_recipient_task = PythonOperator(
+        task_id="set_recipient",
+        python_callable=set_recipient,
+        provide_context=True,
+    )
+
+    # SEND THE EMAIL
+    send_feedback_email = EmailOperator(
+        task_id="send_feedback_email",
+        to="{{ ti.xcom_pull(task_ids='set_recipient', key='recipient_email') }}",
+        subject="New Student Feedback Received",
+
+        html_content="""
+        <h3>New Feedback Received</h3>
+        <p><b>Student Name:</b> Unknown</p>
+        <p><b>Student ID:</b> Unknown</p>
+        <p><b>Sentiment:</b> {{ dag_run.conf.get('sentiment') }}</p>
+        <p><b>Feedback:</b> {{ dag_run.conf.get('feedback') }}</p>
+        """,
+        trigger_rule="all_success",
+    )
+
+    set_recipient_task >> send_feedback_email
