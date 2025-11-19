@@ -1,1 +1,55 @@
 #code here
+import pandas as pd
+import streamlit as st
+import requests
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
+
+st.set_page_config(page_title="Students Performance Dashboard")
+
+st.title("📝FeedBack")
+studnet_id = st.session_state.get("student_id", "")
+student_name = st.session_state.get("student_name1", "")
+last_name = st.session_state.get("student_name2", "")
+
+
+admin_id = st.session_state.get("admin_id", "")
+admin_name = st.session_state.get("admin_name", "")
+
+if studnet_id:
+    st.subheader(f"ID: {studnet_id}")
+    st.subheader(f"Name: {student_name} {last_name}")
+    with st.container(border = True):
+        st.warning("Feel Free To Talk, Taking Into Consideration That Your Name or ID Isn't Exposed To Any One")
+        texts = st.text_area("We Are All Ears", height=200, placeholder = "Type Your Feedback Here...")
+        if st.button("Submit"):
+            model_name = "tabularisai/multilingual-sentiment-analysis"
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            model = AutoModelForSequenceClassification.from_pretrained(model_name)
+            def predict_sentiment(texts):
+                inputs = tokenizer(texts, return_tensors="pt", truncation=True, padding=True, max_length=512)
+                with torch.no_grad():
+                    outputs = model(**inputs)
+                probabilities = torch.nn.functional.softmax(outputs.logits, dim=-1)
+                sentiment_map = {0: "Very Negative", 1: "Negative", 2: "Neutral", 3: "Positive", 4: "Very Positive"}
+                return [sentiment_map[p] for p in torch.argmax(probabilities, dim=-1).tolist()]
+
+            sentiment = predict_sentiment(texts) 
+            response = requests.post(
+                "http://localhost:8080/api/v1/dags/email_feedback_sentiment_dag/dagRuns",
+                auth=("airflow", "airflow"),
+                json={"conf": {"feedback": texts, "sentiment": sentiment}}
+            )
+
+            if response.status_code in [200, 201]:
+                st.success(f"Feedback submitted!")
+                #Type: {sentiment}
+            else:
+                st.error(f"Error triggering DAG: {response.text}")
+            for text, sentiment in zip(texts, predict_sentiment(texts)):
+                st.write(f"Text: {text}\nSentiment: {sentiment}\n")
+
+elif admin_id:
+    st.warning("You Are Not Allowed To Access This Page")
+else:
+    st.warning("Please go back and enter your ID.")
