@@ -1,1 +1,38 @@
 #code here
+
+import streamlit as st
+import pandas as pd
+from pathlib import Path
+
+st.set_page_config(page_title="Students Performance Dashboard")
+
+students = pd.read_csv("students_ids.csv")
+admins = pd.read_csv("admin.csv")
+
+st.title("🎓 Students Dashboard And Ticketing System")
+
+id = st.text_input("Enter Your ID")
+
+srow = students[students["Student_ID"].astype(str) == str(id)]
+arow = admins[admins["id"].astype(str) == str(id)]
+
+
+
+if st.button("Submit"):
+    srow = students[students["Student_ID"].astype(str) == str(id)]
+    arow = admins[admins["id"].astype(str) == str(id)]
+    if id in students["Student_ID"].astype(str).values:
+        st.session_state["student_id"] = id
+        st.session_state["student_name1"] = srow.iloc[0,1]
+        st.session_state["student_name2"] = srow.iloc[0,2]
+        st.success("You Can Now Access Your Scores And Provide Feedback")
+        
+    elif id in admins["id"].astype(str).values:
+        st.session_state["admin_id"] = id
+        st.session_state["admin_name"] = arow.iloc[0, 1]
+        st.success("You Can Now Access Admin Page And See Data Analysis About Grades And Attendance In Scores Page")
+    else:
+        st.warning("❌ Wrong ID")
+
+
+
