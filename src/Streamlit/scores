@@ -1,1 +1,129 @@
 #code here
+import pandas as pd
+import streamlit as st
+from pathlib import Path
+import matplotlib.pyplot as plt
+import numpy as np
+st.set_page_config(page_title="Students Performance Dashboard")
+
+color_map = {
+    "default": "darkorange",
+    "special": "deepskyblue"
+}
+
+
+st.title("📊Scores Table")
+student_id = st.session_state.get("student_id", "")
+student_name = st.session_state.get("student_name1", "")
+last_name = st.session_state.get("student_name2", "")
+
+
+admin_id = st.session_state.get("admin_id", "")
+admin_name = st.session_state.get("admin_name", "")
+
+file_path = Path("students_cleaned.csv")
+
+if student_id:
+    st.subheader(f"ID: {student_id}")
+    st.subheader(f"Name: {student_name} {last_name}")
+    
+
+    if not file_path.exists():
+        st.warning("Scores Are Not Ready Yet")
+    else:
+        cleaned_data = pd.read_csv("students_cleaned.csv")
+        record = cleaned_data[cleaned_data["Student_ID"].astype(str) == str(student_id)]
+        record = record.T
+        st.dataframe(record, width=2000, height=493)
+
+        st.divider()
+        st.title("Overall Performance of Students In Exams")
+        with st.container(border = True):
+            color = "darkorange"
+            SUBJECTS1= ['Biology','English','History']
+            SUBJECTS2 = ['Math','Physics','Chemistry']
+            col1 , col2 = st.columns(2)
+            color = "deepskyblue"
+            with col1:
+                for subject in SUBJECTS1:
+                    fig, ax = plt.subplots()
+                    ax.hist(cleaned_data[subject], bins=10, edgecolor="black", color=color, alpha=0.8)
+                    ax.set_title(f"Distribution of {subject} Scores", fontsize=14, fontweight="bold")
+                    ax.set_xlabel("Scores")
+                    ax.set_ylabel("Number of Students")
+                    ax.grid(axis="y", linestyle="--", alpha=0.7)
+                    # Display the figure in Streamlit
+                    st.pyplot(fig)
+
+            with col2:
+                for subject in SUBJECTS2:
+                    fig, ax = plt.subplots()
+                    ax.hist(cleaned_data[subject], bins=10, edgecolor="black", color=color, alpha=0.8)
+                    ax.set_title(f"Distribution of {subject} Scores", fontsize=14, fontweight="bold")
+                    ax.set_xlabel("Scores")
+                    ax.set_ylabel("Number of Students")
+                    ax.grid(axis="y", linestyle="--", alpha=0.7)
+                    # Display the figure in Streamlit
+                    st.pyplot(fig)
+
+        
+elif admin_id:
+    if not file_path.exists():
+        st.warning("Scores Are Not Ready Yet For Analysis Please Provide The Scores File")
+    else:
+        st.title("Overall Performance of Students In Exams")
+        cleaned_data = pd.read_csv("students_cleaned.csv")
+        with st.container(border = True):
+            color = "darkorange"
+            SUBJECTS1= ['Biology','English','History']
+            SUBJECTS2 = ['Math','Physics','Chemistry']
+            col1 , col2 = st.columns(2)
+            color = "deepskyblue"
+            with col1:
+                for subject in SUBJECTS1:
+                    fig, ax = plt.subplots()
+                    ax.hist(cleaned_data[subject], bins=10, edgecolor="black", color=color, alpha=0.8)
+                    ax.set_title(f"Distribution of {subject} Scores", fontsize=14, fontweight="bold")
+                    ax.set_xlabel("Scores")
+                    ax.set_ylabel("Number of Students")
+                    ax.grid(axis="y", linestyle="--", alpha=0.7)
+                    # Display the figure in Streamlit
+                    st.pyplot(fig)
+
+            with col2:
+                for subject in SUBJECTS2:
+                    fig, ax = plt.subplots()
+                    ax.hist(cleaned_data[subject], bins=10, edgecolor="black", color=color, alpha=0.8)
+                    ax.set_title(f"Distribution of {subject} Scores", fontsize=14, fontweight="bold")
+                    ax.set_xlabel("Scores")
+                    ax.set_ylabel("Number of Students")
+                    ax.grid(axis="y", linestyle="--", alpha=0.7)
+                    # Display the figure in Streamlit
+                    st.pyplot(fig)
+
+        st.divider()
+
+        st.title("Attendance Heatmap")
+        st.write("---------------------")
+        #------------------------
+        #  Attendance Heatmap
+        #------------------------
+        attendance = cleaned_data["Attendance"]
+        attendance = np.sort(attendance)
+
+        rows, cols = 35, 35
+        attendance_grid = np.pad(attendance,
+                                (0, rows * cols - len(attendance)),
+                                mode='constant',
+                                constant_values=np.nan).reshape(rows, cols)
+
+        fig, ax = plt.subplots(figsize=(15, 6))
+        im = ax.imshow(attendance_grid, cmap='YlGnBu', aspect='auto')
+        fig.colorbar(im, ax=ax, label='Attendance (%)')
+        ax.set_title('Student Attendance Heatmap')
+        ax.set_xlabel('Students (grouped)')
+        ax.set_ylabel('Group')
+
+        st.pyplot(fig)
+else:
+    st.warning("Please go back and enter your ID.")
