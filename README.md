@@ -1,4 +1,8 @@
-# 🎓 Student Performance Dashboard & Ticketing System
+## 💻 Usage
+
+### Starting the Application
+
+1. **Start Airflow** (# 🎓 Student Performance Dashboard & Ticketing System
 
 A comprehensive data engineering solution for managing student performance data, providing analytics dashboards, and handling feedback through automated sentiment analysis and email notifications.
 
@@ -214,13 +218,33 @@ streamlit run src/Streamlit/main.py
 
 ### Data Upload Format
 
-CSV file should contain the following columns:
-- `Student_ID`: Unique identifier
-- `First_Name`: Student's first name
-- `Last_Name`: Student's last name
-- `Birth_Date`: Date of birth (YYYY-MM-DD)
-- `Math`, `Physics`, `Chemistry`, `Biology`, `English`, `History`: Subject scores
-- `Attendance`: Attendance percentage
+The system expects CSV files with the following structure:
+
+**Required Columns:**
+- `Student_ID`: Unique integer identifier
+- `First_Name`: Student's first name (or "Unknown" if missing)
+- `Last_Name`: Student's last name (or "Unknown" if missing)
+- `Birth_Date`: Date of birth in DD-MM-YYYY format
+- `Math`: Math score (0-100)
+- `Physics`: Physics score (0-100)
+- `Chemistry`: Chemistry score (0-100)
+- `Biology`: Biology score (0-100)
+- `English`: English score (0-100)
+- `History`: History score (0-100)
+- `Attendance`: Attendance percentage (0-100)
+
+**Sample Data:**
+```csv
+Student_ID,First_Name,Last_Name,Math,Physics,Chemistry,Biology,English,History,Attendance,Birth_Date
+77,Hassan,Ali,96.0,0.0,34.0,45.0,87.0,52.0,88.0,2004-11-26
+1027,Ahmed,Salem,44.0,12.0,12.0,73.0,53.0,0.0,88.0,2001-11-06
+44,Hassan,Ali,87.0,47.0,55.0,0.0,53.0,66.0,83.0,2005-03-09
+```
+
+**After Processing:**
+The system automatically adds:
+- `Average_score`: Calculated mean of all subject scores
+- `Performance`: Categorized as "High" (≥85), "Medium" (≥60), or "Low" (<60)
 
 ## 📁 Project Structure
 
