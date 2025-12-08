@@ -8,7 +8,7 @@ A comprehensive data engineering solution for managing student performance data,
 
 ## 📋 Table of Contents
 
-- [Overview](#[overview](https://github.com/nhahub/NHA-114/blob/main/README.md#overview))
+- [Overview](#[overview](https://github.com/nhahub/NHA-114/blob/main/README.md))
 - [Features](#features)
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
