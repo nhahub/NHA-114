@@ -10,15 +10,15 @@ A comprehensive data engineering solution for managing student performance data,
 
 - [Overview](#[overview](https://github.com/nhahub/NHA-114/blob/main/README.md))
 - [Features](#[features](https://github.com/nhahub/NHA-114/blob/main/README.md))
-- [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Data Pipeline](#data-pipeline)
-- [Contributing](#contributing)
+- [Architecture](#[architecture](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Tech Stack](#[tech-stack](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Prerequisites](#[prerequisites](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Installation](#[installation](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Configuration](#[configuration](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Usage](#[usage](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Project Structure](#[project-structure](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Data Pipeline](#[data-pipeline](https://github.com/nhahub/NHA-114/blob/main/README.md))
+- [Contributing](#[contributing](https://github.com/nhahub/NHA-114/blob/main/README.md))
 
 ## 🌟 Overview
 
