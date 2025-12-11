@@ -9,16 +9,16 @@ A comprehensive data engineering solution for managing student performance data,
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Data Pipeline](#data-pipeline)
-- [Contributing](#contributing)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Tech Stack](#-tech-stack)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Usage](#-usage)
+- [Project Structure](#-project-structure)
+- [Data Pipeline](#-data-pipeline)
+- [Contributing](#-contributing)
 
 ## 🌟 Overview
 
