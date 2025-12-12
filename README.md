@@ -54,19 +54,7 @@ This system provides a complete end-to-end solution for educational institutions
 
 ## 🏗️ Architecture
 
-```
-Raw Data (CSV) 
-    ↓
-Streamlit Upload Interface
-    ↓
-Data Cleaning & Processing
-    ↓
-dbt Seeds & Models
-    ↓
-MySQL Database (Normalized Schema)
-    ↓
-Analytics & Visualization
-```
+![System Architecture](Arch.jpg)
 
 **Feedback Pipeline:**
 ```
